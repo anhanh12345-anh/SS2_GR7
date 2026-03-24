@@ -1,20 +1,50 @@
-import { useEffect, useState } from "react";
+import React, { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useAuthStore } from './store';
+
+import Layout from './components/layout/Layout';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
+import Dashboard from './pages/Dashboard';
+
+
+const PrivateRoute = ({ children }) => {
+  const { isAuthenticated } = useAuthStore();
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
+};
+
+const PublicRoute = ({ children }) => {
+  const { isAuthenticated } = useAuthStore();
+  return !isAuthenticated ? children : <Navigate to="/dashboard" replace />;
+};
 
 function App() {
-  const [message, setMessage] = useState("");
+  const { fetchMe, isAuthenticated } = useAuthStore();
 
   useEffect(() => {
-    fetch("http://localhost:8000")
-      .then((res) => res.text())
-      .then((data) => setMessage(data))
-      .catch((err) => console.log(err));
+    if (isAuthenticated) {
+      fetchMe();
+    }
   }, []);
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>Frontend is running</h1>
-      <p>{message}</p>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        {/* Public routes */}
+        <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+        <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+        <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
+
+        {/* Private routes */}
+        <Route path="/" element={<PrivateRoute><Layout /></PrivateRoute>}>
+          <Route index element={<Navigate to="/dashboard" replace />} />
+          <Route path="dashboard" element={<Dashboard />} />
+        </Route>
+
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
