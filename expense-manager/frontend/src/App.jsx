@@ -7,7 +7,13 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import Dashboard from './pages/Dashboard';
-
+import TransactionsPage from './pages/TransactionsPage';
+import Categories from './pages/Categories';
+import Statistics from './pages/Statistics';
+import Budgets from './pages/Budgets';
+import Reports from './pages/Reports';
+import Reminders from './pages/Reminders';
+import Settings from './pages/Settings';
 
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated } = useAuthStore();
@@ -40,6 +46,14 @@ function App() {
         <Route path="/" element={<PrivateRoute><Layout /></PrivateRoute>}>
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="income" element={<TransactionsPage type="income" />} />
+          <Route path="expenses" element={<TransactionsPage type="expense" />} />
+          <Route path="categories" element={<Categories />} />
+          <Route path="statistics" element={<Statistics />} />
+          <Route path="budgets" element={<Budgets />} />
+          <Route path="reports" element={<Reports />} />
+          <Route path="reminders" element={<Reminders />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
