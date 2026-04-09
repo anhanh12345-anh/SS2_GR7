@@ -100,7 +100,7 @@ const TransactionsPage = ({ type }) => {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28, flexWrap: 'wrap', gap: 16 }}>
         <div>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', fontWeight: 800 }}>
+          <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '2rem', fontWeight: 800 }}>
             {isIncome ? '💰 Thu Nhập' : '💸 Chi Tiêu'}
           </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', marginTop: 4 }}>

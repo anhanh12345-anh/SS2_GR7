@@ -50,12 +50,12 @@ const Reports = () => {
   return (
     <div className="fade-in">
       <div style={{ marginBottom: 28 }}>
-        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', fontWeight: 800 }}>📑 Báo Cáo</h1>
+        <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '2rem', fontWeight: 800 }}>📑 Báo Cáo</h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', marginTop: 4 }}>Xuất và xem báo cáo tài chính</p>
       </div>
 
       <Card style={{ marginBottom: 24 }}>
-        <h3 style={{ fontWeight: 700, marginBottom: 16, fontFamily: 'var(--font-display)' }}>Tạo Báo Cáo</h3>
+        <h3 style={{ fontWeight: 700, marginBottom: 16, fontFamily: 'var(--font-heading)' }}>Tạo Báo Cáo</h3>
         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'flex-end' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6, minWidth: 180 }}>
             <label style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', fontWeight: 500 }}>Từ ngày</label>

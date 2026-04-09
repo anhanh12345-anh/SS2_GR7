@@ -64,7 +64,7 @@ const Dashboard = () => {
       <div style={{ marginBottom: 32, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 16 }}>
         <div>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 500 }}>{getGreeting()},</p>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '2.2rem', fontWeight: 800, marginTop: 4 }}>
+          <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '2.2rem', fontWeight: 800, marginTop: 4 }}>
             {user?.name} 👋
           </h1>
         </div>

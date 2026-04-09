@@ -79,7 +79,7 @@ const Budgets = () => {
     <div className="fade-in">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28, flexWrap: 'wrap', gap: 16 }}>
         <div>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', fontWeight: 800 }}>💳 Ngân Sách</h1>
+          <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '2rem', fontWeight: 800 }}>💳 Ngân Sách</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', marginTop: 4 }}>Kiểm soát chi tiêu theo kế hoạch</p>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>

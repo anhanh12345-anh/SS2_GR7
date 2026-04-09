@@ -54,7 +54,7 @@ const Settings = () => {
   return (
     <div className="fade-in">
       <div style={{ marginBottom: 28 }}>
-        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', fontWeight: 800 }}>⚙️ Cài Đặt</h1>
+        <h1 style={{ fontFamily: 'var(--font-heading', fontSize: '2rem', fontWeight: 800 }}>⚙️ Cài Đặt</h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', marginTop: 4 }}>Quản lý tài khoản và tùy chọn</p>
       </div>
 
