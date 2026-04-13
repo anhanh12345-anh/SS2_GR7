@@ -129,3 +129,47 @@ a { color: inherit; text-decoration: none; }
     border-color 0.3s ease,
     box-shadow 0.4s ease;
 }
+
+/* Toolbar */
+.rbc-toolbar button {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+/* Hover */
+.rbc-toolbar button:hover {
+  background: var(--bg-elevated);
+}
+
+/* Active view (Month / Week / Day) */
+.rbc-toolbar button.rbc-active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+/* Fix chữ bị mờ */
+.rbc-toolbar-label {
+  color: var(--text-primary);
+}
+
+/* Calendar nền */
+.rbc-calendar {
+  background: transparent;
+  color: var(--text-primary);
+}
+
+/* Header (Sun Mon Tue...) */
+.rbc-header {
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Ngày hôm nay */
+.rbc-today {
+  background: rgba(108, 99, 255, 0.15);
+}

@@ -14,6 +14,7 @@ import Budgets from './pages/Budgets';
 import Reports from './pages/Reports';
 import Reminders from './pages/Reminders';
 import Settings from './pages/Settings';
+import DebtPage from './pages/DebtPage';
 
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated } = useAuthStore();
@@ -54,6 +55,7 @@ function App() {
           <Route path="reports" element={<Reports />} />
           <Route path="reminders" element={<Reminders />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="debts" element={<DebtPage />} /> 
         </Route>
 
         <Route path="*" element={<Navigate to="/dashboard" replace />} />

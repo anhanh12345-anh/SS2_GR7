@@ -16,6 +16,7 @@ const navItems = [
   { to: '/statistics', icon: PieChart, label: 'Thống kê' },
   { to: '/reports', icon: FileText, label: 'Báo cáo' },
   { to: '/reminders', icon: Bell, label: 'Nhắc nhở' },
+  { to: '/debts', icon: ArrowDownCircle, label: 'Nợ nần' },
   { to: '/settings', icon: Settings, label: 'Cài đặt' },
 ];
 
