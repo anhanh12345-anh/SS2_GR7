@@ -50,7 +50,7 @@ const Reports = () => {
   return (
     <div className="fade-in">
       <div style={{ marginBottom: 28 }}>
-        <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '2rem', fontWeight: 800 }}>📑 Báo Cáo</h1>
+        <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '2rem', fontWeight: 800 }}>Báo Cáo</h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', marginTop: 4 }}>Xuất và xem báo cáo tài chính</p>
       </div>
 

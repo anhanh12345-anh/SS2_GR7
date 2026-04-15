@@ -79,7 +79,7 @@ const Budgets = () => {
     <div className="fade-in">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28, flexWrap: 'wrap', gap: 16 }}>
         <div>
-          <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '2rem', fontWeight: 800 }}>💳 Ngân Sách</h1>
+          <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '2rem', fontWeight: 800 }}>Ngân Sách</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', marginTop: 4 }}>Kiểm soát chi tiêu theo kế hoạch</p>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
@@ -126,7 +126,7 @@ const Budgets = () => {
           {[1,2,3].map(i => <div key={i} style={{ height: 160, background: 'var(--bg-card)', borderRadius: 16, border: '1px solid var(--border)' }} />)}
         </div>
       ) : budgets.length === 0 ? (
-        <EmptyState icon="💳" title="Chưa có ngân sách nào" description="Tạo ngân sách để kiểm soát chi tiêu" action={<Button onClick={() => openModal()} icon={<Plus size={14} />}>Tạo ngân sách</Button>} />
+        <EmptyState title="Chưa có ngân sách nào" description="Tạo ngân sách để kiểm soát chi tiêu" action={<Button onClick={() => openModal()} icon={<Plus size={14} />}>Tạo ngân sách</Button>} />
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
           {budgets.map(budget => {

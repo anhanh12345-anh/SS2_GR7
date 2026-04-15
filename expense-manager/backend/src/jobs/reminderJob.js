@@ -4,7 +4,7 @@ const Reminder = require('../models/Reminder');
 
 const startReminderJob = () => {
   cron.schedule('* * * * *', async () => {
-    console.log('⏰ Running reminder job...');
+    console.log('Running reminder job...');
 
     const now = new Date();
 
@@ -23,9 +23,9 @@ const startReminderJob = () => {
         let message = '';
 
         if (debt.dueDate < now) {
-          message = `⚠️ Khoản nợ với ${debt.personName} đã quá hạn!`;
+          message = `Khoản nợ với ${debt.personName} đã quá hạn!`;
         } else {
-          message = `⏰ Khoản nợ với ${debt.personName} sắp đến hạn!`;
+          message = `Khoản nợ với ${debt.personName} sắp đến hạn!`;
         }
 
         await Reminder.create({

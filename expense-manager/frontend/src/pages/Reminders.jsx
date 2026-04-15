@@ -6,13 +6,14 @@ import { formatDate } from '../utils';
 import { Plus, CheckCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-// 📅 Calendar
+
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
+import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'; 
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
 
-import 'react-big-calendar/lib/css/react-big-calendar.css';
-import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
+
 
 const localizer = momentLocalizer(moment);
 const DnDCalendar = withDragAndDrop(Calendar);
@@ -80,7 +81,7 @@ const Reminders = () => {
     setModalOpen(true);
   };
 
-  // 🖱️ Drag → đổi ngày
+  // Drag → đổi ngày
   const moveEvent = async ({ event, start }) => {
     try {
       await reminderAPI.update(event.id, { dueDate: start });
@@ -201,7 +202,7 @@ const Reminders = () => {
             fontSize: '1.8rem',
             fontWeight: 800
           }}>
-            🔔 Nhắc Nhở
+            Nhắc Nhở
           </h1>
           <p style={{
             color: 'var(--text-secondary)',
@@ -257,7 +258,7 @@ const Reminders = () => {
 
           <Card style={{ padding: 16 }}>
             <h3 style={{ fontWeight: 700, marginBottom: 12 }}>
-              📋 Công việc ({upcoming.length})
+              Công việc ({upcoming.length})
             </h3>
 
             {upcoming.length === 0 ? (

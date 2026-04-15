@@ -81,7 +81,7 @@ const Categories = () => {
     <div className="fade-in">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28, flexWrap: 'wrap', gap: 16 }}>
         <div>
-          <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '2rem', fontWeight: 800 }}>🏷️ Danh Mục</h1>
+          <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '2rem', fontWeight: 800 }}>Danh Mục</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', marginTop: 4 }}>Quản lý danh mục thu và chi</p>
         </div>
         <Button onClick={() => openModal()} icon={<Plus size={16} />}>Thêm danh mục</Button>
@@ -89,7 +89,7 @@ const Categories = () => {
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: 4, marginBottom: 24, background: 'var(--bg-card)', borderRadius: 12, padding: 4, width: 'fit-content', border: '1px solid var(--border)' }}>
-        {[{ key: 'expense', label: '💸 Chi tiêu' }, { key: 'income', label: '💰 Thu nhập' }].map(tab => (
+        {[{ key: 'expense', label: 'Chi tiêu' }, { key: 'income', label: 'Thu nhập' }].map(tab => (
           <button key={tab.key} onClick={() => setActiveTab(tab.key)} style={{
             padding: '8px 20px', borderRadius: 10, border: 'none', cursor: 'pointer',
             fontWeight: 600, fontSize: '0.88rem', transition: 'all 0.2s',
@@ -109,7 +109,7 @@ const Categories = () => {
           ))}
         </div>
       ) : filtered.length === 0 ? (
-        <EmptyState icon="🏷️" title="Chưa có danh mục" description="Thêm danh mục để phân loại giao dịch" action={<Button onClick={() => openModal()} icon={<Plus size={14} />}>Thêm ngay</Button>} />
+        <EmptyState title="Chưa có danh mục" description="Thêm danh mục để phân loại giao dịch" action={<Button onClick={() => openModal()} icon={<Plus size={14} />}>Thêm ngay</Button>} />
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 14 }}>
           {filtered.map(cat => (

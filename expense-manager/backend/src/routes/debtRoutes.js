@@ -4,7 +4,7 @@ const DebtTransaction = require("../models/DebtTransaction");
 
 const router = express.Router();
 
-// ➕ Create debt
+// Create debt
 router.post("/", async (req, res) => {
   try {
     const debt = await Debt.create(req.body);
@@ -14,13 +14,13 @@ router.post("/", async (req, res) => {
   }
 });
 
-// 📋 Get all
+// Get all
 router.get("/", async (req, res) => {
   const debts = await Debt.find();
   res.json(debts);
 });
 
-// 💸 Repay
+// Repay
 router.post("/:id/repay", async (req, res) => {
   const { amount } = req.body;
 

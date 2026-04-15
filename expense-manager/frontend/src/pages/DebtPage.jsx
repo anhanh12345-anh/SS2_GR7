@@ -1,24 +1,29 @@
 import { useEffect, useState } from "react";
-import { debtAPI } from "../services/api";  
-import { useAuthStore } from "../store";
+import { debtAPI } from "../services/api";
+import DebtChart from "../components/charts/DebtChart";
 
 
 export default function DebtPage() {
 
   const [debts, setDebts] = useState([]);
   const [type, setType] = useState("borrow");
+  const [search, setSearch] = useState("");
 
   const [form, setForm] = useState({
     personName: "",
     amount: "",
+    dueDate: "",
   });
 
+
   const fetchDebts = async () => {
+  
     try {
       const res = await debtAPI.getAll({ type });
-      setDebts(res.data);
+      setDebts(res.data || []);
     } catch (err) {
       console.error(err);
+      setDebts([]);
     }
   };
 
@@ -27,14 +32,17 @@ export default function DebtPage() {
   }, [type]);
 
   const handleCreate = async () => {
+    if (!form.personName || !form.amount) return;
+
     await debtAPI.create({
       userId: "1",
       personName: form.personName,
       type,
       totalAmount: Number(form.amount),
+      dueDate: form.dueDate,
     });
 
-    setForm({ personName: "", amount: "" });
+    setForm({ personName: "", amount: "", dueDate: "" });
     fetchDebts();
   };
 
@@ -46,22 +54,40 @@ export default function DebtPage() {
     fetchDebts();
   };
 
+  const filteredDebts = debts.filter((d) =>
+    d.personName?.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
-    <div className="p-6">
-      <h1 className="text-xl font-bold mb-4">Quản lý nợ</h1>
+    <div className="debt-container">
+      <h1 className="debt-title">Quản lý nợ</h1>
 
       {/* Tabs */}
-      <div className="flex gap-2 mb-4">
-        <button onClick={() => setType("borrow")}>
+      <div className="tabs">
+        <button
+          className={type === "borrow" ? "tab active borrow" : "tab"}
+          onClick={() => setType("borrow")}
+        >
           Bạn vay
         </button>
-        <button onClick={() => setType("lend")}>
+        <button
+          className={type === "lend" ? "tab active lend" : "tab"}
+          onClick={() => setType("lend")}
+        >
           Cho vay
         </button>
       </div>
 
+      {/* Search */}
+      <input
+        className="search"
+        placeholder="Tìm theo tên..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+
       {/* Form */}
-      <div className="mb-4 flex gap-2">
+      <div className="form-card">
         <input
           placeholder="Tên người"
           value={form.personName}
@@ -70,42 +96,77 @@ export default function DebtPage() {
           }
         />
         <input
-          placeholder="Số tiền"
           type="number"
+          placeholder="Số tiền"
           value={form.amount}
           onChange={(e) =>
             setForm({ ...form, amount: e.target.value })
           }
         />
-        <button onClick={handleCreate}>Thêm</button>
+        <input
+          type="date"
+          value={form.dueDate}
+          onChange={(e) =>
+            setForm({ ...form, dueDate: e.target.value })
+          }
+        />
+        <button className="btn-add" onClick={handleCreate}>
+          + Thêm
+        </button>
       </div>
 
+      {/* Chart */}
+      <DebtChart debts={debts} />
+
       {/* List */}
-      {debts.length === 0 ? (
-        <p className="text-gray-500">
-          Chưa có khoản nợ nào
-        </p>
+      {filteredDebts.length === 0 ? (
+        <p className="empty">Chưa có khoản nợ nào</p>
       ) : (
-        debts.map((d) => {
-          const remaining = d.totalAmount - d.paidAmount;
+        <div className="debt-list">
+          {filteredDebts.map((d) => {
+            const paid = d.paidAmount || 0;
+            const remaining = d.totalAmount - paid;
 
-          return (
-            <div
-              key={d._id}
-              className="border p-3 mb-2 rounded"
-            >
-              <p>{d.personName}</p>
-              <p>Còn lại: {remaining}</p>
-              <p>Trạng thái: {d.status}</p>
+            const due = d.dueDate ? new Date(d.dueDate) : null;
+            const isOverdue = due && due < new Date();
+            const isPaid = d.status === "paid";
 
-              {d.status !== "paid" && (
-                <button onClick={() => handleRepay(d._id)}>
-                  Trả nợ
-                </button>
-              )}
-            </div>
-          );
-        })
+            return (
+              <div className="debt-card" key={d._id}>
+                <div>
+                  <h3>{d.personName}</h3>
+                  <p className="amount">
+                    Còn lại: {remaining.toLocaleString()}₫
+                  </p>
+                  <p
+                    className={`status ${
+                      isPaid
+                        ? "paid"
+                        : isOverdue
+                        ? "overdue"
+                        : "pending"
+                    }`}
+                  >
+                    {isPaid
+                      ? "✔ Đã trả"
+                      : isOverdue
+                      ? "⚠ Quá hạn"
+                      : "⏳ Chưa trả"}
+                  </p>
+                </div>
+
+                {!isPaid && (
+                  <button
+                    className="btn-repay"
+                    onClick={() => handleRepay(d._id)}
+                  >
+                    Trả
+                  </button>
+                )}
+              </div>
+            );
+          })}
+        </div>
       )}
     </div>
   );

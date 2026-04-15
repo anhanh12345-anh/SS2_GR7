@@ -65,7 +65,7 @@ const Dashboard = () => {
         <div>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 500 }}>{getGreeting()},</p>
           <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '2.2rem', fontWeight: 800, marginTop: 4 }}>
-            {user?.name} 👋
+            {user?.name} 
           </h1>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
@@ -126,7 +126,7 @@ const Dashboard = () => {
                 <Bar dataKey="expense" name="Chi tiêu" fill="#ff5b7d" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
-          ) : <EmptyState icon="📊" title="Chưa có dữ liệu" />}
+          ) : <EmptyState title="Chưa có dữ liệu" />}
         </Card>
 
         {/* Recent Transactions */}
@@ -163,7 +163,7 @@ const Dashboard = () => {
               ))}
             </div>
           ) : (
-            <EmptyState icon="📝" title="Chưa có giao dịch nào" description="Bắt đầu thêm thu chi của bạn" />
+            <EmptyState title="Chưa có giao dịch nào" description="Bắt đầu thêm thu chi của bạn" />
           )}
         </Card>
       </div>

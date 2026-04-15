@@ -60,7 +60,7 @@ const Layout = () => {
               cursor: 'pointer'
             }}
           >
-            {theme === "dark" ? "🌞 Light" : "🌙 Dark"}
+            {theme === "dark" ? "Light" : "Dark"}
           </button>
         </div>
 
