@@ -1,8 +1,8 @@
-# 💰 FinanceFlow - Hệ thống Quản lý Chi tiêu
+# FinanceFlow - Hệ thống Quản lý Chi tiêu
 
 Ứng dụng quản lý tài chính cá nhân với giao diện hiện đại, dark theme, hỗ trợ đầy đủ tính năng thu chi.
 
-## 🏗️ Công nghệ sử dụng
+##Công nghệ sử dụng
 
 | Layer      | Technology           |
 |------------|---------------------|
@@ -13,7 +13,7 @@
 | Charts     | Recharts            |
 | State      | Zustand             |
 
-## 📁 Cấu trúc dự án
+## Cấu trúc dự án
 
 ```
 expense-manager/
@@ -39,7 +39,7 @@ expense-manager/
     └── package.json
 ```
 
-## 🚀 Cài đặt và chạy
+## Cài đặt và chạy
 
 ### Yêu cầu hệ thống
 - Node.js >= 18.x
@@ -93,19 +93,19 @@ npm run dev
    MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/expense_manager
    ```
 
-## 🎯 Tính năng
+## Tính năng
 
 | Tính năng | Mô tả |
 |-----------|-------|
-| 🔐 Auth | Đăng ký, đăng nhập, đổi mật khẩu, quên mật khẩu |
-| 💰 Thu nhập | Thêm, sửa, xóa, lọc thu nhập theo danh mục |
-| 💸 Chi tiêu | Thêm, sửa, xóa, tìm kiếm chi tiêu |
-| 🏷️ Danh mục | Tùy chỉnh danh mục với icon và màu sắc |
-| 📊 Thống kê | Biểu đồ tròn, cột, đường xu hướng |
-| 💳 Ngân sách | Đặt ngân sách, cảnh báo vượt ngân sách |
-| 📑 Báo cáo | Xem và xuất báo cáo PDF, Excel |
-| 🔔 Nhắc nhở | Nhắc nhở chi tiêu, hóa đơn định kỳ |
-| ⚙️ Cài đặt | Cập nhật hồ sơ, đổi mật khẩu |
+|  Auth | Đăng ký, đăng nhập, đổi mật khẩu, quên mật khẩu |
+|  Thu nhập | Thêm, sửa, xóa, lọc thu nhập theo danh mục |
+|  Chi tiêu | Thêm, sửa, xóa, tìm kiếm chi tiêu |
+|  Danh mục | Tùy chỉnh danh mục với icon và màu sắc |
+|  Thống kê | Biểu đồ tròn, cột, đường xu hướng |
+|  Ngân sách | Đặt ngân sách, cảnh báo vượt ngân sách |
+|  Báo cáo | Xem và xuất báo cáo PDF, Excel |
+|  Nhắc nhở | Nhắc nhở chi tiêu, hóa đơn định kỳ |
+|  Cài đặt | Cập nhật hồ sơ, đổi mật khẩu |
 
 ## 📡 API Endpoints
 
@@ -143,14 +143,14 @@ PUT    /api/reminders/:id          - Sửa nhắc nhở
 DELETE /api/reminders/:id          - Xóa nhắc nhở
 ```
 
-## 🎨 Design System
+## Design System
 
 - **Font**: Syne (Display) + DM Sans (Body)
 - **Theme**: Dark mode
 - **Colors**: Accent Purple (#6c63ff), Green (#00d48a), Red (#ff5b7d)
 - **Responsive**: Grid layout với flexbox
 
-## 🔒 Bảo mật
+## Bảo mật
 
 - JWT Authentication với expire
 - Bcrypt password hashing (12 rounds)
@@ -158,7 +158,7 @@ DELETE /api/reminders/:id          - Xóa nhắc nhở
 - CORS configured
 - Input validation
 
-## 📦 Build cho Production
+## Build cho Production
 
 ```bash
 # Frontend
