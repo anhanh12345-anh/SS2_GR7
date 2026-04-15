@@ -1,20 +1,17 @@
+require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const rateLimit = require('express-rate-limit');
 
-// 🔔 Cron job
 const { startReminderJob } = require('./jobs/reminderJob');
 
-// Load env
-dotenv.config();
+
+const chatRoute = require('./routes/chat');
 
 const app = express();
-
-// ======================
-// 🔧 MIDDLEWARE
-// ======================
 
 // CORS
 app.use(cors({
@@ -28,7 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Rate limit
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 phút
+  windowMs: 15 * 60 * 1000,
   max: 100,
   message: {
     success: false,
@@ -37,9 +34,7 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-// ======================
-// 📌 ROUTES
-// ======================
+// ================= ROUTES =================
 
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
@@ -48,13 +43,14 @@ app.use('/api/transactions', require('./routes/transactions'));
 app.use('/api/budgets', require('./routes/budgets'));
 app.use('/api/reports', require('./routes/reports'));
 app.use('/api/reminders', require('./routes/reminders'));
-
-// 💸 NEW: Debt routes
 app.use('/api/debts', require('./routes/debtRoutes'));
 
-// ======================
-// ❤️ HEALTH CHECK
-// ======================
+
+app.use('/api/chat', chatRoute);
+
+// ==========================================
+
+// Health check
 app.get('/api/health', (req, res) => {
   res.json({
     success: true,
@@ -63,9 +59,7 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// ======================
-// ❌ ERROR HANDLER
-// ======================
+// Error handler
 app.use((err, req, res, next) => {
   console.error('🔥 ERROR:', err.stack);
 
@@ -75,11 +69,10 @@ app.use((err, req, res, next) => {
   });
 });
 
-// ======================
-// 🛢️ DATABASE + SERVER
-// ======================
+// ================= DB + SERVER =================
 
 const PORT = process.env.PORT || 5000;
+
 const MONGODB_URI =
   process.env.MONGODB_URI ||
   'mongodb://localhost:27017/expense_manager';
@@ -89,22 +82,20 @@ mongoose.connect(MONGODB_URI, {
   useUnifiedTopology: true,
 })
 .then(() => {
-  console.log('✅ MongoDB connected');
+  console.log('MongoDB connected');
 
-  // 🔔 Start reminder job
   try {
     startReminderJob();
-    console.log('⏰ Reminder job started');
+    console.log('Reminder job started');
   } catch (err) {
     console.error('Reminder job error:', err.message);
   }
 
-  // 🚀 Start server
   app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
   });
 })
 .catch(err => {
-  console.error('❌ MongoDB connection error:', err);
+  console.error('MongoDB connection error:', err);
   process.exit(1);
 });

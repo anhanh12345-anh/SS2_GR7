@@ -2,6 +2,9 @@ import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './store';
 
+// 👉 thêm dòng này
+import Chatbot from './components/chatbot/Chatbot';
+
 import Layout from './components/layout/Layout';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -37,6 +40,9 @@ function App() {
 
   return (
     <BrowserRouter>
+      {/* 🔥 CHATBOT GLOBAL */}
+      <Chatbot />
+
       <Routes>
         {/* Public routes */}
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
@@ -55,7 +61,7 @@ function App() {
           <Route path="reports" element={<Reports />} />
           <Route path="reminders" element={<Reminders />} />
           <Route path="settings" element={<Settings />} />
-          <Route path="debts" element={<DebtPage />} /> 
+          <Route path="debts" element={<DebtPage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/dashboard" replace />} />

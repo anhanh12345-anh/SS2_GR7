@@ -101,7 +101,7 @@ const TransactionsPage = ({ type }) => {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28, flexWrap: 'wrap', gap: 16 }}>
         <div>
           <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '2rem', fontWeight: 800 }}>
-            {isIncome ? '💰 Thu Nhập' : '💸 Chi Tiêu'}
+            {isIncome ? 'Thu Nhập' : 'Chi Tiêu'}
           </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', marginTop: 4 }}>
             Quản lý {isIncome ? 'thu nhập' : 'chi tiêu'} của bạn
@@ -177,7 +177,6 @@ const TransactionsPage = ({ type }) => {
           </div>
         ) : transactions.length === 0 ? (
           <EmptyState
-            icon={isIncome ? '💰' : '💸'}
             title={`Chưa có ${isIncome ? 'thu nhập' : 'chi tiêu'} nào`}
             description="Nhấn nút thêm để bắt đầu ghi chép"
             action={<Button onClick={() => openModal()} icon={<Plus size={14} />}>Thêm ngay</Button>}
