@@ -2,7 +2,7 @@
 
 Ứng dụng quản lý tài chính cá nhân với giao diện hiện đại, dark theme, hỗ trợ đầy đủ tính năng thu chi.
 
-##Công nghệ sử dụng
+## 🏗️ Công nghệ sử dụng
 
 | Layer      | Technology           |
 |------------|---------------------|
@@ -56,9 +56,9 @@ npm install
 cp .env.example .env
 
 # Chỉnh sửa .env với thông tin của bạn:
-# MONGODB_URI=mongodb://localhost:27017/expense_manager
+# MONGODB_URI=mongodb://localhost:27017/expense_db
 # JWT_SECRET=your_super_secret_key_here
-# PORT=5000
+# PORT=5001
 ```
 
 ### 2. Cài đặt Frontend
@@ -74,7 +74,7 @@ npm install
 ```bash
 cd backend
 npm run dev
-# Server chạy tại http://localhost:5000
+# Server chạy tại http://localhost:5001
 ```
 
 **Terminal 2 - Frontend:**
@@ -97,17 +97,17 @@ npm run dev
 
 | Tính năng | Mô tả |
 |-----------|-------|
-|  Auth | Đăng ký, đăng nhập, đổi mật khẩu, quên mật khẩu |
-|  Thu nhập | Thêm, sửa, xóa, lọc thu nhập theo danh mục |
-|  Chi tiêu | Thêm, sửa, xóa, tìm kiếm chi tiêu |
-|  Danh mục | Tùy chỉnh danh mục với icon và màu sắc |
-|  Thống kê | Biểu đồ tròn, cột, đường xu hướng |
-|  Ngân sách | Đặt ngân sách, cảnh báo vượt ngân sách |
-|  Báo cáo | Xem và xuất báo cáo PDF, Excel |
-|  Nhắc nhở | Nhắc nhở chi tiêu, hóa đơn định kỳ |
-|  Cài đặt | Cập nhật hồ sơ, đổi mật khẩu |
+| 🔐 Auth | Đăng ký, đăng nhập, đổi mật khẩu, quên mật khẩu |
+| 💰 Thu nhập | Thêm, sửa, xóa, lọc thu nhập theo danh mục |
+| 💸 Chi tiêu | Thêm, sửa, xóa, tìm kiếm chi tiêu |
+| 🏷️ Danh mục | Tùy chỉnh danh mục với icon và màu sắc |
+| 📊 Thống kê | Biểu đồ tròn, cột, đường xu hướng |
+| 💳 Ngân sách | Đặt ngân sách, cảnh báo vượt ngân sách |
+| 📑 Báo cáo | Xem và xuất báo cáo PDF, Excel |
+| 🔔 Nhắc nhở | Nhắc nhở chi tiêu, hóa đơn định kỳ |
+| ⚙️ Cài đặt | Cập nhật hồ sơ, đổi mật khẩu |
 
-## 📡 API Endpoints
+## API Endpoints
 
 ```
 POST   /api/auth/register          - Đăng ký
