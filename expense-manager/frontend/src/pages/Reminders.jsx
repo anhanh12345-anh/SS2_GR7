@@ -71,7 +71,6 @@ const Reminders = () => {
     }
   });
 
-  //  Click ngày → tạo
   const handleSelectSlot = (slotInfo) => {
     setForm({
       title: '',
@@ -92,12 +91,10 @@ const Reminders = () => {
     }
   };
 
-  // Click event → edit
   const handleSelectEvent = (event) => {
     openModal(event.raw);
   };
 
-  // ================= CRUD =================
   const openModal = (item = null) => {
     if (item) {
       setEditItem(item);
@@ -197,11 +194,9 @@ const Reminders = () => {
   );
 };
 
-  // ================= DATA =================
   const upcoming = reminders.filter(r => !r.isCompleted);
   const completed = reminders.filter(r => r.isCompleted);
 
-  // ================= UI =================
   return (
     <div className="fade-in">
 
