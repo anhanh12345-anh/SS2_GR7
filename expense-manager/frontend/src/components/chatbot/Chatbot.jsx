@@ -11,7 +11,7 @@ export default function Chatbot() {
 
   const bottomRef = useRef(null);
 
-  // auto scroll
+  // Auto scroll
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
@@ -21,28 +21,65 @@ export default function Chatbot() {
 
     const userMsg = { role: "user", text: input };
     setMessages((prev) => [...prev, userMsg]);
+
+    const currentInput = input; 
     setInput("");
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/chat", {
+      const token = localStorage.getItem("token");
+
+      const res = await fetch("http://localhost:5001/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }), 
         },
-        body: JSON.stringify({ message: input }),
+        body: JSON.stringify({
+          message: currentInput,
+          isFirstMessage: messages.length === 1
+        }),
       });
 
       const data = await res.json();
 
+      console.log("Chat response:", {
+        status: res.status,
+        data,
+        token: token ? "EXISTS" : "MISSING"
+      });
+
+      // ❗ Nếu bị unauthorized
+      if (res.status === 401) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "ai",
+            text: "Bạn cần đăng nhập để sử dụng chatbot. Vui lòng đăng nhập và thử lại!"
+          }
+        ]);
+        return;
+      }
+
+      const reply =
+        data.reply ||
+        data.message ||
+        "Không có phản hồi 😢";
+
       setMessages((prev) => [
         ...prev,
-        { role: "ai", text: data.reply || "Không có phản hồi" }
+        { role: "ai", text: reply }
       ]);
+
     } catch (err) {
+      console.error("Chat fetch error:", err);
+
       setMessages((prev) => [
         ...prev,
-        { role: "ai", text: "Có lỗi xảy ra 😢" }
+        {
+          role: "ai",
+          text: "Không kết nối được server 😢"
+        }
       ]);
     }
 
@@ -51,7 +88,7 @@ export default function Chatbot() {
 
   return (
     <>
-      {/* Nút luôn hiện */}
+      {/* Button */}
       <button
         onClick={() => setOpen(!open)}
         style={{
@@ -121,14 +158,19 @@ export default function Chatbot() {
             <div
               key={i}
               style={{
+                width: "fit-content",
                 maxWidth: "75%",
-                padding: "8px 10px",
+                minWidth: "60px",
+                padding: "8px 12px",
                 margin: "5px 0",
                 borderRadius: "10px",
                 background:
                   msg.role === "user" ? "#4f46e5" : "#e5e7eb",
                 color: msg.role === "user" ? "white" : "black",
-                marginLeft: msg.role === "user" ? "auto" : "0"
+                marginLeft: msg.role === "user" ? "auto" : "0",
+                marginRight: msg.role === "user" ? "0" : "auto",
+                wordWrap: "break-word",
+                whiteSpace: "pre-wrap"
               }}
             >
               {msg.text}

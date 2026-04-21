@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const debtSchema = new mongoose.Schema(
   {
-    userId: { type: String, required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     personName: { type: String, required: true },
     type: {
       type: String,

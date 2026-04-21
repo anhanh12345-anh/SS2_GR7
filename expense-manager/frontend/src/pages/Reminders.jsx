@@ -3,7 +3,7 @@ import { reminderAPI } from '../services/api';
 import { Card, Modal, Input, EmptyState } from '../components/ui';
 import Button from '../components/ui/Button';
 import { formatDate } from '../utils';
-import { Plus, CheckCircle } from 'lucide-react';
+import { Plus, CheckCircle, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 
@@ -109,7 +109,7 @@ const Reminders = () => {
       setEditItem(null);
       setForm({
         title: '',
-        dueDate: ''
+        dueDate: moment().format('YYYY-MM-DD')
       });
     }
     setModalOpen(true);
@@ -120,6 +120,11 @@ const Reminders = () => {
 
     if (!form.title) {
       toast.error('Nhập tiêu đề');
+      return;
+    }
+
+    if (!form.dueDate) {
+      toast.error('Chọn ngày nhắc nhở');
       return;
     }
 
@@ -150,6 +155,17 @@ const Reminders = () => {
     }
   };
 
+  const handleDelete = async (id) => {
+    if (!window.confirm('Xóa nhắc nhở này?')) return;
+    try {
+      await reminderAPI.delete(id);
+      fetchReminders();
+      toast.success('Đã xóa');
+    } catch {
+      toast.error('Lỗi xóa');
+    }
+  };
+
   const CustomToolbar = (toolbar) => {
   const goToBack = () => toolbar.onNavigate('PREV');
   const goToNext = () => toolbar.onNavigate('NEXT');
@@ -176,7 +192,6 @@ const Reminders = () => {
         <button onClick={() => toolbar.onView('month')}>Month</button>
         <button onClick={() => toolbar.onView('week')}>Week</button>
         <button onClick={() => toolbar.onView('day')}>Day</button>
-        <button onClick={() => toolbar.onView('agenda')}>Agenda</button>
       </div>
     </div>
   );
@@ -315,14 +330,36 @@ const Reminders = () => {
               {completed.map(r => (
                 <div key={r._id} style={{
                   display: 'flex',
+                  alignItems: 'center',
                   gap: 8,
                   opacity: 0.5,
-                  marginBottom: 6
+                  marginBottom: 6,
+                  justifyContent: 'space-between'
                 }}>
-                  <CheckCircle size={14} />
-                  <span style={{ textDecoration: 'line-through' }}>
-                    {r.title}
-                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <CheckCircle size={14} />
+                    <span style={{ textDecoration: 'line-through' }}>
+                      {r.title}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => handleDelete(r._id)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      color: 'var(--red)',
+                      padding: '4px 8px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      opacity: 0.7,
+                      transition: 'opacity 0.2s'
+                    }}
+                    onMouseEnter={e => e.target.style.opacity = 1}
+                    onMouseLeave={e => e.target.style.opacity = 0.7}
+                  >
+                    <Trash2 size={14} />
+                  </button>
                 </div>
               ))}
             </Card>

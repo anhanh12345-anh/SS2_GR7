@@ -7,8 +7,6 @@ const startReminderJob = () => {
     console.log('Running reminder job...');
 
     const now = new Date();
-
-    // 1 ngày trước hạn
     const nextDay = new Date();
     nextDay.setDate(now.getDate() + 1);
 
@@ -29,9 +27,9 @@ const startReminderJob = () => {
         }
 
         await Reminder.create({
-          userId: debt.userId,
+          title: message,
+          user: debt.userId,
           debtId: debt._id,
-          message,
         });
 
         debt.reminderSent = true;

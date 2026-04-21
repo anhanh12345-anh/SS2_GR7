@@ -40,7 +40,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      {/* 🔥 CHATBOT GLOBAL */}
+      {/* CHATBOT GLOBAL */}
       <Chatbot />
 
       <Routes>

@@ -42,14 +42,14 @@ export default function DebtChart({ debts = [] }) {
     <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow mb-6">
       <h2 className="font-semibold mb-2">Tổng quan</h2>
 
-      <ResponsiveContainer width="100%" height={200}>
+      <ResponsiveContainer width="100%" height={300}>
         <PieChart>
-          <Pie data={data} dataKey="value" outerRadius={70}>
+          <Pie data={data} dataKey="value" outerRadius={100}>
             {data.map((entry, index) => (
               <Cell key={index} fill={COLORS[index]} />
             ))}
           </Pie>
-          <Tooltip />
+          <Tooltip formatter={(value) => [value.toLocaleString('vi-VN') + '₫', '']} />
         </PieChart>
       </ResponsiveContainer>
     </div>
