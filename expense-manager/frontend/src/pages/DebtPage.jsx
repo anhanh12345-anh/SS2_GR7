@@ -12,6 +12,7 @@ export default function DebtPage() {
   const [form, setForm] = useState({
     personName: "",
     amount: "",
+    borrowDate: "",
     dueDate: "",
   });
 
@@ -32,6 +33,11 @@ export default function DebtPage() {
   }, []);
 
   // ================= CREATE =================
+  const getTodayDateString = () => {
+    const today = new Date();
+    return today.toISOString().split("T")[0];
+  };
+
   const handleCreate = async () => {
   console.log("CLICK CREATE");
 
@@ -45,12 +51,13 @@ export default function DebtPage() {
       personName: form.personName,
       type,
       totalAmount: Number(form.amount),
-      dueDate: form.dueDate,
+      borrowDate: form.borrowDate || getTodayDateString(),
+      dueDate: form.dueDate || getTodayDateString(),
     });
 
     console.log("SUCCESS:", res.data);
 
-    setForm({ personName: "", amount: "", dueDate: "" });
+    setForm({ personName: "", amount: "", borrowDate: "", dueDate: "" });
     fetchDebts();
   } catch (err) {
     console.error("CREATE ERROR:", err.response?.data || err.message);
@@ -132,6 +139,9 @@ export default function DebtPage() {
     const oneMonthAgo = new Date();
     oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
+    const threeMonthsAgo = new Date();
+    threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+
     const createdDate = d.createdAt
       ? new Date(d.createdAt)
       : d.dueDate
@@ -139,9 +149,10 @@ export default function DebtPage() {
       : new Date();
 
     const isWithinMonth = createdDate > oneMonthAgo;
+    const isWithinThreeMonths = createdDate > threeMonthsAgo;
 
     const matchesHistory = showHistory
-      ? !isWithinMonth
+      ? isWithinThreeMonths
       : isWithinMonth;
 
     return (
@@ -153,6 +164,11 @@ export default function DebtPage() {
   });
 
   // ================= UTIL =================
+  const formatDate = (date) => {
+    if (!date) return "";
+    return new Date(date).toLocaleDateString("vi-VN");
+  };
+
   const getDaysLeft = (dueDate) => {
     const now = new Date();
     const due = new Date(dueDate);
@@ -197,6 +213,13 @@ export default function DebtPage() {
           value={form.amount}
           onChange={(e) =>
             setForm({ ...form, amount: e.target.value })
+          }
+        />
+        <input
+          type="date"
+          value={form.borrowDate}
+          onChange={(e) =>
+            setForm({ ...form, borrowDate: e.target.value })
           }
         />
         <input
@@ -316,45 +339,47 @@ export default function DebtPage() {
                 }}
               />
 
-          <div style={{ display: "flex", gap: 10, margin: "12px 0" }}>
-                {[
-                  { key: "pending", label: "Chưa trả", color: "#3b82f6" },
-                  { key: "paid", label: "Đã trả", color: "#22c55e" },
-                ].map((btn) => (
-                  <button
-                    key={btn.key}
-                    onClick={() => setStatusTab(btn.key)}
-                    style={{
-                      padding: "8px 14px",
-                      borderRadius: "999px",
-                      border: "1px solid #e5e7eb",
-                      background:
-                        statusTab === btn.key ? btn.color : "transparent",
-                      color: statusTab === btn.key ? "#fff" : "var(--text-color)",
-                      fontWeight: 500,
-                      cursor: "pointer",
-                      transition: "all 0.2s ease",
-                    }}
-                  >
-                    {btn.label}
-                  </button>
-                ))}
-
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, margin: "12px 0" }}>
+            <div style={{ display: "flex", gap: 10 }}>
+              {[
+                { key: "pending", label: "Chưa trả", color: "#3b82f6" },
+                { key: "paid", label: "Đã trả", color: "#22c55e" },
+              ].map((btn) => (
                 <button
-                  onClick={() => setShowHistory(!showHistory)}
+                  key={btn.key}
+                  onClick={() => setStatusTab(btn.key)}
                   style={{
                     padding: "8px 14px",
                     borderRadius: "999px",
                     border: "1px solid #e5e7eb",
-                    background: showHistory ? "#8b5cf6" : "transparent",
-                    color: showHistory ? "#fff" : "var(--text-color)",
+                    background:
+                      statusTab === btn.key ? btn.color : "transparent",
+                    color: statusTab === btn.key ? "#fff" : "var(--text-color)",
+                    fontWeight: 500,
                     cursor: "pointer",
                     transition: "all 0.2s ease",
                   }}
                 >
-                  Lịch sử
+                  {btn.label}
                 </button>
-              </div>
+              ))}
+            </div>
+
+            <button
+              onClick={() => setShowHistory(!showHistory)}
+              style={{
+                padding: "8px 14px",
+                borderRadius: "999px",
+                border: "1px solid #e5e7eb",
+                background: showHistory ? "#8b5cf6" : "transparent",
+                color: showHistory ? "#fff" : "var(--text-color)",
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+              }}
+            >
+              Lịch sử
+            </button>
+          </div>
 
           {filteredDebts.length === 0 ? (
             <p>Không có dữ liệu</p>
@@ -396,9 +421,22 @@ export default function DebtPage() {
           {d.type === "borrow" ? "Bạn vay" : "Cho vay"}
         </p>
 
-        <p style={{ fontWeight: 700, marginTop: 4 }}>
-          {remaining.toLocaleString("vi-VN")}₫
+        <p style={{ fontSize: 14, opacity: 0.75, marginTop: 4 }}>
+          Ngày vay: {formatDate(d.borrowDate)}
+          {d.dueDate ? ` • Hạn trả: ${formatDate(d.dueDate)}` : ""}
         </p>
+
+        <p style={{ fontWeight: 700, marginTop: 4 }}>
+          {isPaid
+            ? `Đã vay: ${d.totalAmount.toLocaleString("vi-VN")}₫`
+            : `${remaining.toLocaleString("vi-VN")}₫`}
+        </p>
+
+        {isPaid && (
+          <p style={{ color: "#10b981", fontSize: 13 }}>
+            Đã hoàn tất
+          </p>
+        )}
 
         {isOverdue && (
           <p style={{ color: "#ef4444", fontSize: 13 }}>

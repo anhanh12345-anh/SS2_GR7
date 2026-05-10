@@ -3,10 +3,150 @@ const router = express.Router();
 const { OpenAI } = require("openai");
 const { protect } = require("../middleware/auth");
 const Transaction = require("../models/Transaction");
+const Debt = require("../models/Debt");
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "fake_key_for_debug",
 });
+
+const formatCurrency = (amount) => `${amount.toLocaleString('vi-VN')}₫`;
+
+const normalizeName = (text) => text.toLowerCase().trim();
+
+const queryDebtData = async (message, userId) => {
+  try {
+    const msg = message.toLowerCase();
+
+    const extractName = () => {
+      const patterns = [
+        /tôi có nợ\s+([^?]+?)\s*(?:không|\?)?$/,
+        /tôi nợ\s+([^?]+?)\s*(?:không|\?)?$/,
+        /([^?]+?)\s+nợ tôi\s*(?:bao nhiêu|\?)?$/,
+        /([^?]+?)\s+nợ tôi\s*(?:không|\?)?$/,
+      ];
+
+      for (const regex of patterns) {
+        const match = msg.match(regex);
+        if (match && match[1]) {
+          const found = match[1].trim();
+          const normalized = normalizeName(found);
+          if (['người khác', 'một người khác', 'ai', 'mấy người'].includes(normalized)) {
+            return null;
+          }
+          return found;
+        }
+      }
+      return null;
+    };
+
+    const matchExactUserOwe = [
+      'tôi đang nợ',
+      'tôi nợ',
+      'tôi đang nợ bao nhiêu',
+      'tôi nợ bao nhiêu',
+      'nợ của tôi',
+      'bản thân đang nợ',
+      'còn nợ bao nhiêu',
+    ].some((keyword) => msg.includes(keyword));
+
+    const matchOthersOweMe = [
+      'người khác nợ tôi',
+      'người khác nợ',
+      'nợ tôi bao nhiêu',
+      'nợ tôi',
+      'ai nợ tôi',
+    ].some((keyword) => msg.includes(keyword));
+
+    const specificName = extractName();
+
+    if (matchExactUserOwe && !matchOthersOweMe && !specificName) {
+      const debts = await Debt.find({ userId, type: 'borrow' });
+      const outstanding = debts
+        .map((d) => Math.max((d.totalAmount || 0) - (d.paidAmount || 0), 0))
+        .filter((value) => value > 0);
+
+      const totalOwed = outstanding.reduce((sum, v) => sum + v, 0);
+      if (totalOwed === 0) {
+        return 'Bạn hiện không còn nợ ai.';
+      }
+
+      const grouped = debts.reduce((acc, d) => {
+        const remaining = Math.max((d.totalAmount || 0) - (d.paidAmount || 0), 0);
+        if (remaining <= 0) return acc;
+        const name = d.personName || 'Không rõ';
+        acc[name] = (acc[name] || 0) + remaining;
+        return acc;
+      }, {});
+
+      let response = `Bạn đang nợ tổng cộng ${formatCurrency(totalOwed)}.`;
+      response += '\nChi tiết:';
+      Object.entries(grouped).forEach(([name, amount], index) => {
+        response += `\n${index + 1}. ${name}: ${formatCurrency(amount)}`;
+      });
+      return response;
+    }
+
+    if (matchOthersOweMe && !matchExactUserOwe && !specificName) {
+      const debts = await Debt.find({ userId, type: 'lend' });
+      const outstanding = debts
+        .map((d) => Math.max((d.totalAmount || 0) - (d.paidAmount || 0), 0))
+        .filter((value) => value > 0);
+
+      const totalOwedToYou = outstanding.reduce((sum, v) => sum + v, 0);
+      if (totalOwedToYou === 0) {
+        return 'Hiện tại không có ai còn nợ bạn.';
+      }
+
+      const grouped = debts.reduce((acc, d) => {
+        const remaining = Math.max((d.totalAmount || 0) - (d.paidAmount || 0), 0);
+        if (remaining <= 0) return acc;
+        const name = d.personName || 'Không rõ';
+        acc[name] = (acc[name] || 0) + remaining;
+        return acc;
+      }, {});
+
+      let response = `Người khác đang nợ bạn tổng cộng ${formatCurrency(totalOwedToYou)}.`;
+      response += '\nChi tiết:';
+      Object.entries(grouped).forEach(([name, amount], index) => {
+        response += `\n${index + 1}. ${name}: ${formatCurrency(amount)}`;
+      });
+      return response;
+    }
+
+    if (specificName) {
+      const normalizedSpecificName = normalizeName(specificName);
+      const debtsOwedToYou = await Debt.find({ userId, type: 'lend' });
+      const debtsYouOwe = await Debt.find({ userId, type: 'borrow' });
+
+      const owedToYou = debtsOwedToYou
+        .filter((d) => normalizeName(d.personName) === normalizedSpecificName)
+        .reduce((sum, d) => sum + Math.max((d.totalAmount || 0) - (d.paidAmount || 0), 0), 0);
+
+      const youOwe = debtsYouOwe
+        .filter((d) => normalizeName(d.personName) === normalizedSpecificName)
+        .reduce((sum, d) => sum + Math.max((d.totalAmount || 0) - (d.paidAmount || 0), 0), 0);
+
+      if (msg.includes('nợ tôi') || msg.includes('nợ bạn') || msg.includes('nợ mình')) {
+        if (owedToYou > 0) {
+          return `${specificName.trim()} đang nợ bạn ${formatCurrency(owedToYou)}.`;
+        }
+        return `${specificName.trim()} hiện không còn nợ bạn.`;
+      }
+
+      if (msg.includes('tôi có nợ') || msg.includes('tôi nợ') || msg.includes('có nợ')) {
+        if (youOwe > 0) {
+          return `Bạn đang nợ ${specificName.trim()} ${formatCurrency(youOwe)}.`;
+        }
+        return `Bạn hiện không nợ ${specificName.trim()}.`;
+      }
+    }
+
+    return null;
+  } catch (err) {
+    console.error('Debt query error:', err.message);
+    return null;
+  }
+};
 
 const queryTransactionData = async (message, userId) => {
   try {
@@ -175,7 +315,16 @@ router.post("/", protect, async (req, res) => {
 
     console.log("Chat message:", message, "from user:", userId);
 
-    // Try to query real data first
+    // Try to query debt data first for nợ/cho vay questions
+    const debtResponse = await queryDebtData(message, userId);
+    if (debtResponse) {
+      return res.json({
+        success: true,
+        reply: debtResponse,
+      });
+    }
+
+    // Try to query transaction data next
     const dataResponse = await queryTransactionData(message, userId);
     if (dataResponse) {
       return res.json({
